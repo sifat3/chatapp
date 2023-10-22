@@ -30,15 +30,18 @@ def signup(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
-        password2 = request.POST.get('password1')
-        if password1 == password2:
-            user = User.objects.create(username=username, password=password1, email=email)
-            user.save()
-            login(request, user)
-            messages.success(request, f'Account Created Successfully. Welcome {username}')
-            return redirect('home')
+        password2 = request.POST.get('password2')
+        if User.objects.filter(username=username).exists():
+            messages.success(request, "Username taken.")
         else:
-            messages.success(request, "Passwords don't match")
+            if password1 == password2:
+                user = User.objects.create(username=username, password=password1, email=email)
+                user.save()
+                login(request, user)
+                messages.success(request, f'Account Created Successfully. Welcome {username}')
+                return redirect('home')
+            else:
+                messages.success(request, "Passwords don't match")
     return render(request, 'chat/signup.html')
 
 
