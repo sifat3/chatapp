@@ -19,6 +19,12 @@
                     class="d-inline-block align-text-top">
                 CHATAPP
             </a>
+        
+            {% if user.is_authenticated %}
+            <a class="btn btn-warning" href="{% url 'logout' %}">
+                Logout
+            </a>
+            {% endif %}
         </div>
     </nav>
     {% if messages %}

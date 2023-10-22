@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -9,13 +10,13 @@ def home(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(username, password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success("Login successful!")
+            messages.success(request, "Login successful!")
             return redirect('home')
         else:
-            messages.success('Invalid Username or Password, Please Try Again.')
+            messages.success(request, 'Invalid Username or Password, Please Try Again.')
             return redirect('home')
 
 
@@ -25,6 +26,25 @@ def home(request):
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password1')
+        if password1 == password2:
+            user = User.objects.create(username=username, password=password1, email=email)
+            user.save()
+            login(request, user)
+            messages.success(request, f'Account Created Successfully. Welcome {username}')
+            return redirect('home')
+        else:
+            messages.success(request, "Passwords don't match")
     return render(request, 'chat/signup.html')
 
+
+@login_required(login_url='home')
+def logout_user(request):
+    logout(request)
+    messages.success(request, "Successfully Logged Out!")
+    return redirect('home')
 
