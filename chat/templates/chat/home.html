@@ -2,8 +2,13 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<div container>
+<div class="container">
+    <br>
     <h4>Hello {{user.username}}</h4>
+    <hr>
+    <div class="container">
+        <a class="btn btn-success" href="{% url 'inbox' %}">INBOX</a>
+    </div>
 </div>
 {% else %}
 <div class="container">

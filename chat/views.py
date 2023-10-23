@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .models import *
 
 
 def home(request):
@@ -51,3 +52,7 @@ def logout_user(request):
     messages.success(request, "Successfully Logged Out!")
     return redirect('home')
 
+
+@login_required(login_url='home')
+def inbox_view(request):
+    return render(request, 'chat/inbox.html')
