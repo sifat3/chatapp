@@ -14,14 +14,14 @@
                 <div class="card">
                     <div class="card-body">
                         {% if chat.user1 == request.user %}
-                        <a href="">{{chat.user2.username}}</a>
+                        <a class="btn btn-outline-dark" href="{% url 'chat' chat.id %}">@{{chat.user2.username}}</a>
                         {% else %}
-                        <a href="">{{chat.user1.username}}</a>
+                        <a class="btn btn-outline-dark" href="{% url 'chat' chat.id %}">@{{chat.user1.username}}</a>
                         {% endif %}
+                        <!-- <button type="button" class="btn btn-outline-light">Light</button> -->
                     </div>
                 </div>
                 {% endfor %}
-            </div>
         </div>
     </div>
 </div>
@@ -35,12 +35,11 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" name="username"
-                    aria-describedby="emailHelp">
+                <input type="text" class="form-control" required name="username">
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" name="password" id="exampleInputPassword1">
+                <input type="password" class="form-control" name="password" required>
             </div>
             <button type="submit" class="btn btn-success">Submit</button>
         </form>

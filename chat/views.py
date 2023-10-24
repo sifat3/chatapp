@@ -9,8 +9,8 @@ from .models import *
 def home(request):
 
     if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
@@ -39,16 +39,16 @@ def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
         if User.objects.filter(username=username).exists():
             messages.success(request, "Username taken.")
         else:
             if password1 == password2:
-                user = User.objects.create(username=username, password=password1, email=email)
-                user.save()
+                user = User.objects.create_user(username=username, password=password1, email=email)
+                # user.save()
                 login(request, user)
                 messages.success(request, f'Account Created Successfully. Welcome {username}')
                 return redirect('home')
@@ -64,25 +64,18 @@ def logout_user(request):
     return redirect('home')
 
 
-@login_required(login_url='home')
-def inbox_view(request):
-    if Chat.objects.filter(inbox=inbox).exists():
-        chats = Chat.objects.filter(inbox=inbox)
-    else:
-        chats = []
-    context = {
-        'chats': chats
-    }
-    return render(request, 'chat/inbox.html', context)
-
 
 
 @login_required(login_url='home')
 def chat_view(request, pk):
-    chat = Chat.objects.get(sender=request.user, reciever=User.objects.get(id=pk))
-    messages = chat.message.all()
+    chat = Chat.objects.get(id=pk)
+    messages = Message.objects.filter(chat=chat)
+
+    if request.method == "POST":
+        body = request.POST['body']
+        Message.objects.create(user=request.user, chat=chat, body=body)
+
     context = {
         'body_messages': messages,
-        'chat': chat
     }
     return render(request, 'chat/chat.html', context)
