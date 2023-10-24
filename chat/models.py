@@ -3,20 +3,19 @@ from django.contrib.auth.models import User
 
 
 
-class Inbox(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return self.user.__str__()
-
-
 class Chat(models.Model):
-    sender = models.ForeignKey(User, null=False, blank=False, related_name='sender', on_delete=models.CASCADE)
-    reciever = models.ForeignKey(User, null=False, blank=False, related_name='reciever', on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return self.reciever.__str__()
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+    users = models.ManyToManyField(
+        User, related_name='users', blank=False)
+    
+    
 
 class Message(models.Model):
-    chat = models.ForeignKey(Chat, null=False, blank=False, on_delete=models.CASCADE)
-    body = models.TextField(null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    body = models.TextField()
+
+    def __str__(self) -> str:
+        return self.body
+

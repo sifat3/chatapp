@@ -3,11 +3,26 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-    <br>
-    <h4>Hello {{user.username}}</h4>
-    <hr>
     <div class="container">
-        <a class="btn btn-success" href="{% url 'inbox' %}">INBOX</a>
+        <div class="container">
+            <br>
+            <h3>{{user.username}}'s Inbox:</h3>
+            <hr>
+            <div class="container">
+                {% for chat in chats %}
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        {% if chat.user1 == request.user %}
+                        <a href="">{{chat.user2.username}}</a>
+                        {% else %}
+                        <a href="">{{chat.user1.username}}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 {% else %}

@@ -4,14 +4,13 @@
 
 <div class="container">
     <br>
-    <h3>{{user.username}}'s Inbox:</h3>
-    <hr>
     <div class="container">
-        {% for chat in chats %}
+        {% for body_message in body_messages %}
         <br>
         <div class="card">
             <div class="card-body">
-                <a href="">{{chat}}</a>
+                <p><i>{{chat.sender.username}}</i></p>
+                <h4>{{body_message}}</h4>
             </div>
         </div>
         {% endfor %}
