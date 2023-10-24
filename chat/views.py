@@ -87,3 +87,44 @@ def chat_view(request, pk):
         'body_messages': messages,
     }
     return render(request, 'chat/chat.html', context)
+
+@login_required(login_url='home')
+def new_chat(request, pk):
+    if pk == 0:
+        q = request.GET.get('q') if request.GET.get('q') != None else ''
+        if q is not "" or None:
+            if User.objects.filter(username=q).exists():
+                user = User.objects.get(username=q)  
+            else:
+                user = None
+        else:
+            user = None   
+
+    else:
+        user = None 
+        if Chat.objects.filter(users=request.user).exists():
+            chat = Chat.objects.filter(users=request.user)
+            if chat.filter(users=(User.objects.get(id=pk))).exists():
+                chat = chat.get(users=(User.objects.get(id=pk)))
+                return redirect('chat', pk=chat.id)
+            else:
+                chat = Chat.objects.create(user1=request.user, user2=User.objects.get(id=pk))
+                chat.save()
+                chat.users.add(request.user)
+                chat.users.add(User.objects.get(id=pk))
+                chat.save()
+                return redirect('chat', pk=chat.id)
+        else:
+                chat = Chat.objects.create(user1=request.user, user2=User.objects.get(id=pk))
+                chat.save()
+                chat.users.add(request.user)
+                chat.users.add(User.objects.get(id=pk))
+                chat.save()
+                return redirect('chat', pk=chat.id)
+
+
+    context = {
+        "user": user,
+    }
+
+    return render(request, "chat/new_chat.html", context)
