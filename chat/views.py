@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 
 
+
 def home(request):
 
     if request.method == "POST":
@@ -22,7 +23,14 @@ def home(request):
     
     if request.user.is_authenticated:
         if Chat.objects.filter(users=request.user).exists():
+            q = request.GET.get('q') if request.GET.get('q') != None else ''
+            
             chats = Chat.objects.filter(users=request.user)
+            if q is not "" or None:
+                if User.objects.filter(username=q).exists():
+                    searched_user = User.objects.get(username=q)
+                    if searched_user:
+                        chats = chats.filter(users=searched_user)
         else:
             chats = []
     else:

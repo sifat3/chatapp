@@ -6,11 +6,21 @@
     <div class="container">
         <div class="container">
             <br>
-            <h3>{{user.username}}'s Inbox:</h3>
+            <h3>@{{user.username}}</h3>
+            <form class="d-flex" role="search" action="{% url 'home' %}" style="width: 15rem; inline-size: 30%;" method="GET">
+                <input class="form-control me-2" name="q" type="search" placeholder="Search In Inbox" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
             <hr>
+            <div class="card" style="width: 8rem;">
+                <div class="card-body">
+                    <a href="" class="btn btn-success">New Chat</a>
+                </div>
+            </div>
             <div class="container">
-                {% for chat in chats %}
                 <br>
+                <h4>Chats</h4>
+                {% for chat in chats %}
                 <div class="card">
                     <div class="card-body">
                         {% if chat.user1 == request.user %}
@@ -18,9 +28,9 @@
                         {% else %}
                         <a class="btn btn-outline-dark" href="{% url 'chat' chat.id %}">@{{chat.user1.username}}</a>
                         {% endif %}
-                        <!-- <button type="button" class="btn btn-outline-light">Light</button> -->
                     </div>
                 </div>
+                <br>
                 {% endfor %}
         </div>
     </div>
