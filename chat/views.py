@@ -128,3 +128,8 @@ def new_chat(request, pk):
     }
 
     return render(request, "chat/new_chat.html", context)
+
+
+@login_required
+def videocall(request):
+    return render(request, 'chat/videocall.html', {"name": request.user.username})
